@@ -1,12 +1,12 @@
 FROM ubuntu:22.04 as build-cuda-plugin
-LABEL maintainer="Patrice Ferlet <metal3d@gmail.com>"
+LABEL maintainer="Patrice Ferlet <wenbo007@gmail.com>"
 
 ARG CUDA_VERSION=11-4
 RUN set -xe; \
   apt-get update; \
   apt-get install -y nvidia-cuda-toolkit;
 
-ARG CUDA_PLUGIN_VERSION=6.22.0
+ARG CUDA_PLUGIN_VERSION=6.22.2
 RUN set -xe; \
   apt-get install -y wget build-essential cmake automake libtool autoconf; \
   apt-get install -y gcc-9 g++-9; \
@@ -23,8 +23,8 @@ RUN set -xe; \
 
 
 FROM ubuntu:22.04 as build-runner
-ARG XMRIG_VERSION=6.22.0
-LABEL maintainer="Patrice Ferlet <metal3d@gmail.com>"
+ARG XMRIG_VERSION=6.22.2
+LABEL maintainer="Patrice Ferlet <wenbo007@gmail.com>"
 
 RUN set -xe; \
   apt-get update; \
@@ -50,9 +50,9 @@ RUN set -xe; \
 
 
 FROM ubuntu:22.04 as runner
-LABEL maintainer="Patrice Ferlet <metal3d@gmail.com>"
-LABEL org.opencontainers.image.source="https://github.com/metal3d/docker-xmrig"
-LABEL org.opencontainers.image.description="XMRig miner with CUDA support on Docker, Podman, Kubernetes..." 
+LABEL maintainer="Patrice Ferlet <wenbo007@gmail.com>"
+LABEL org.opencontainers.image.source="https://github.com/bobvane/docker-xmrig"
+LABEL org.opencontainers.image.description="XMRig miner with CUDA support on Docker， Podman， Kubernetes。。。" 
 LABEL org.opencontainers.image.licenses="MIT"
 RUN set -xe; \
   mkdir /xmrig; \
@@ -65,9 +65,9 @@ COPY --from=build-runner /xmrig/src/config.json /xmrig/config.json
 COPY --from=build-cuda-plugin /xmrig-cuda/build/libxmrig-cuda.so /usr/local/lib/
 
 
-ENV POOL_USER="44vjAVKLTFc7jxTv5ij1ifCv2YCFe3bpTgcRyR6uKg84iyFhrCesstmWNUppRCrxCsMorTP8QKxMrD3QfgQ41zsqMgPaXY5" \
+ENV POOL_USER="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV" \
   POOL_PASS="" \
-  POOL_URL="xmr.metal3d.org:8080" \
+  POOL_URL="stratum+ssl://us。monero。herominers。com:1111" \
   DONATE_LEVEL=5 \
   PRIORITY=0 \
   THREADS=0 \
