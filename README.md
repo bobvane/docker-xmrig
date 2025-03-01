@@ -1,4 +1,4 @@
-# Xmrig - Monero Miner in Docker
+# Xmrig - 门罗币（Monero）挖矿的 Docker 版本
 
 [Xmrig](https://xmrig.com/) is an open-source project for mining Monero cryptocurrency. It allows you to mine locally
 for a pool and receive Monero for your efforts.
@@ -19,7 +19,7 @@ docker run --rm -it ghcr.io/metal3d/xmrig:latest
 podman run --rm -it ghcr.io/metal3d/xmrig:latest
 ```
 
-By default, without any options, you will mine for me, which is a way to support the project. To mine for **your wallet**,
+By default, without any options, you will mine for me, which is a way to support the project. To mine for **your wallet**，
 modify the options using environment variables:
 
 ```bash
@@ -51,7 +51,7 @@ podman run --name miner --rm -it \
 `DONATE_LEVEL` is **not a donation to me**, it's the donation included in the Xmrig project to support its developers.
 Please leave it at the default value of 5 or higher to contribute to the project.
 
-Press `CTRL+C` to stop the container, and it will be automatically removed.
+按 `CTRL+C` to stop the container, 和 it will be automatically removed.
 
 ### Environment Variables
 
