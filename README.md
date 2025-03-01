@@ -16,8 +16,8 @@ docker run --rm -it ghcr.io/metal3d/xmrig:latest
 podman run --rm -it ghcr.io/metal3d/xmrig:latest
 ```
 
-By default, without any options, you will mine for me, which is a way to support the project. To mine for **your wallet**，
-modify the options using environment variables:
+默认情况下，不使用任何选项，你将为我挖矿，这是一种支持项目的方式。 要为**你的钱包**挖矿，
+请使用环境变量修改选项：
 
 ```bash
 export POOL_URL="your pool URL"
@@ -25,18 +25,18 @@ export POOL_USER="Your public Monero address"
 export POOL_PASS="can be empty for some pools, otherwise use it as miner ID"
 export DONATE_LEVEL="Xmrig project donation in percent, default is 5"
 
-# Update the image
+# 更新镜像
 docker pull ghcr.io/metal3d/xmrig:latest
-# or with podman
+# 或者podman使用
 podman pull ghcr.io/metal3d/xmrig:latest
-# Launch the Docker container
+# 启动 Docker 容器
 docker run --name miner --rm -it \
     -e POOL_URL=$POOL_URL \
     -e POOL_USER=$POOL_USER \
     -e POOL_PASS=$POOL_PASS \
     -e DONATE_LEVEL=$DONATE_LEVEL \
     ghcr.io/metal3d/xmrig:latest
-# or with podman
+# 或者启动podman
 podman run --name miner --rm -it \
     -e POOL_URL=$POOL_URL \
     -e POOL_USER=$POOL_USER \
@@ -45,8 +45,7 @@ podman run --name miner --rm -it \
     ghcr.io/metal3d/xmrig:latest
 ```
 
-`DONATE_LEVEL` is **not a donation to me**, it's the donation included in the Xmrig project to support its developers.
-Please leave it at the default value of 5 or higher to contribute to the project.
+`DONATE_LEVEL`项**不是捐赠给我**, 而是Xmrig项目中包含的捐赠，用于支持其开发者。请将其保持在默认值5或更高，以贡献给该项目。
 
 按 `CTRL+C` to stop the container, 和 it will be automatically removed.
 
@@ -67,7 +66,7 @@ Please leave it at the default value of 5 or higher to contribute to the project
 
 ### Using CUDA
 
-Follow instructions from [Nvidia documentation](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) and [the page for Podman using CDI](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html) if you prefer Podman.
+Follow instructions from [Nvidia documentation](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) 和 [the page for Podman using CDI](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html) if you prefer Podman.
 
 To use CUDA devices:
 
