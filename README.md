@@ -47,9 +47,9 @@ podman run --name miner --rm -it \
 
 `DONATE_LEVEL`项**不是捐赠给我**, 而是Xmrig项目中包含的捐赠，用于支持其开发者。请将其保持在默认值5或更高，以贡献给该项目。
 
-按 `CTRL+C` to stop the container, 和 it will be automatically removed.
+按 `CTRL+C` to 停止容器，它将被自动删除。
 
-### Environment Variables
+### 环境变量
 
 - `POOL_USER`: your wallet address (default is mine)
 - `POOL_URL`: the pool address (default is `xmr.metal3d.org:8080`)
