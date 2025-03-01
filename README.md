@@ -1,17 +1,14 @@
 # Xmrig - 门罗币（Monero）挖矿的 Docker 版本
 
-[Xmrig](https://xmrig.com/) is an open-source project for mining Monero cryptocurrency. It allows you to mine locally
-for a pool and receive Monero for your efforts.
+[Xmrig](https://xmrig.com/) 是一个开源项目，用于挖掘门罗币加密货币。它允许你在矿池进行本地挖矿，并因你的努力而获得门罗币。
 
-Here, you can launch Xmrig in a Podman or Docker container and to easily run it on Kubernetes, or your local computer
-using standard Docker commands.
+在这里，你可以使用 Podman 或 Docker 容器启动 Xmrig，并轻松地在 Kubernetes 上或你的本地计算机上运行它，使用标准的 Docker 命令。
 
-## Getting Started
+## 入门
 
-To mine for **your wallet**, you need a Monero wallet (see [MyMonero](https://mymonero.com/)) and follow the
-instructions below to configure the container accordingly.
+要为 **你的钱包**挖矿，你需要一个Monero钱包 (参见 [MyMonero](https://mymonero.com/)) 并按照以下说明配置容器。
 
-### Launching Xmrig
+### 启动Xmrig
 
 ```bash
 docker run --rm -it ghcr.io/metal3d/xmrig:latest
