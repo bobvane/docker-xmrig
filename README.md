@@ -64,11 +64,11 @@ podman run --name miner --rm -it \
 - `CUDA`: 激活 CUDA（设置为“true”）。需要将 GPU 共享到容器 (请参阅 [Nvidia 文档](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html))
 - `NO_CPU`: 禁用 CPU 上的计算（仅适用于 CUDA 上挖矿）
 
-### Using CUDA
+### 使用 CUDA
 
-Follow instructions from [Nvidia documentation](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) 和 [the page for Podman using CDI](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html) if you prefer Podman.
+按照 [Nvidia 文档](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) 中的说明操作，如果你更喜欢使用 Podman，请参考 [Podman 的 CDI 页面](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html) 。
 
-To use CUDA devices:
+要使用 CUDA 设备：
 
 ```bash
 # Replace podman with docker if you are using Docker
@@ -90,7 +90,7 @@ podman run --rm -it \
 ## Notes about MSR (Model Specific Registry)
 
 Xmrig requires setting MSR (Model Specific Registry) to achieve optimal hashrates. If MSR is not allowed, your hashrate
-will be low, and a warning will appear in the terminal. To enable MSR inside the container (for Podman), use the
+will be low, 和 a warning will appear in the terminal. To enable MSR inside the container (for Podman), use the
 following commands:
 
 ```bash
