@@ -51,18 +51,18 @@ podman run --name miner --rm -it \
 
 ### 环境变量
 
-- `POOL_USER`: your wallet address (default is mine)
-- `POOL_URL`: the pool address (default is `xmr.metal3d.org:8080`)
-- `POOL_PASS`: the pool password or worker ID (default for me is "donator" + UUID)
-- `DONATE_LEVEL`: percentage of donation to Xmrig.com project (leave the default at 5 or higher)
-- `PRIORITY`: CPU priority (0=idle, 1=normal, 2 to 5 for higher priority)
-- `THREADS`: number of threads to start (default is number of CPU / 2)
-- `ACCESS_TOKEN`: Bearer access token to access the Xmrig API (served on port 3000, default is a generated token (UUID))
-- `ALGO`: mining algorithm (default is empty, refer to [Xmrig documentation](https://xmrig.com/docs/algorithms))
-- `COIN`: coin option instead of algorithm (default is empty)
-- `WORKERNAME`: naming the worker (generated with a random UUID if not specified)
-- `CUDA`: activate CUDA (set to "true"). Requires GPU sharing to containers (refer to [Nvidia documentation](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html))
-- `NO_CPU`: deactivate computation on CPU (useful for mining only on CUDA)
+- `POOL_USER`: 你的钱包地址（默认是我的）
+- `POOL_URL`: 池地址（默认是 xmr.metal3d.org:8080）
+- `POOL_PASS`: 池密码或工作 ID（我的默认值是 "donator" + UUID）
+- `DONATE_LEVEL`: 向 Xmrig.com 项目捐赠的百分比（保留默认值 5 或更高）
+- `PRIORITY`: CPU 优先级（0=空闲, 1=正常, 2 到 5 用于更高的优先级）
+- `THREADS`: 要启动的线程数（默认是 CPU 数量 / 2）
+- `ACCESS_TOKEN`: 访问 Xmrig API 的 Bearer 访问令牌（在端口 3000 上提供，默认是一个生成的令牌 (UUID)）
+- `ALGO`: 挖矿算法（默认为空，参考 [Xmrig 文档](https://xmrig.com/docs/algorithms))
+- `COIN`: 硬币选项而不是算法（默认为空）
+- `WORKERNAME`: 命名工作者（如果未指定，则使用随机生成的 UUID）
+- `CUDA`: 激活 CUDA（设置为“true”）。需要将 GPU 共享到容器 (请参阅 [Nvidia 文档](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html))
+- `NO_CPU`: 禁用 CPU 上的计算（仅适用于 CUDA 上挖矿）
 
 ### Using CUDA
 
