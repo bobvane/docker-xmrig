@@ -87,11 +87,9 @@ podman run --rm -it \
     ghcr.io/metal3d/xmrig:latest
 ```
 
-## Notes about MSR (Model Specific Registry)
+## 关于 MSR（Model Specific Registry）的说明
 
-Xmrig requires setting MSR (Model Specific Registry) to achieve optimal hashrates. If MSR is not allowed, your hashrate
-will be low, 和 a warning will appear in the terminal. To enable MSR inside the container (for Podman), use the
-following commands:
+Xmrig 需要设置 MSR（Model Specific Registry）以实现最佳的哈希率。如果未允许 MSR，您的哈希率将很低，并且终端会出现警告。要在容器内启用 MSR（对于 Podman），请使用以下命令：
 
 ```bash
 # Basic mining with CPU (replace podman with docker if you are using Docker)
