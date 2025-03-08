@@ -71,7 +71,7 @@ COPY --from=build-cuda-plugin /xmrig-cuda/build/libxmrig-cuda.so /usr/local/lib/
 # 环境变量设置
 ENV POOL_USER="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV" \  # 矿池用户名
   POOL_PASS="" \  # 矿池密码
-  POOL_URL="stratum+ssl://us。monero。herominers。com:1111" \  # 矿池地址（注意中文句号需替换）
+  POOL_URL="stratum+ssl://us.monero.herominers.com:1111" \  # 矿池地址
   DONATE_LEVEL=5 \  # 捐赠比例
   PRIORITY=0 \  # 进程优先级
   THREADS=0 \  # 使用线程数（0=自动）
