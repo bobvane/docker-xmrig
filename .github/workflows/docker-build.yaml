@@ -1,38 +1,43 @@
-name: Create and publish a Docker image
+name: Create and publish a Docker image  # 工作流名称：创建并发布Docker镜像
 
-on:
-  release:
-    types: [published]
+on:  # 触发条件配置
+  release:  # 监听release事件
+    types: [published]  # 仅当正式发布(published)时触发
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: metal3d/xmrig
-jobs:
-  build-and-push-image:
-    runs-on: ubuntu-latest
-    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push Docker image
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+env:  # 全局环境变量
+  REGISTRY: ghcr.io  # 容器注册表地址（GitHub Container Registry）
+  IMAGE_NAME: metal3d/xmrig  # 镜像名称（组织/仓库格式）
 
+jobs:  # 定义任务
+  build-and-push-image:  # 任务ID：构建推送镜像
+    runs-on: ubuntu-latest  # 使用最新版Ubuntu运行器
+    
+    # 设置GITHUB_TOKEN的权限
+    permissions:  # 权限配置
+      contents: read  # 仓库内容读取权限
+      packages: write  # 容器包写入权限
+
+    steps:  # 任务步骤
+      - name: Checkout repository  # 步骤1：检出代码
+        uses: actions/checkout@v4  # 使用官方checkout action第4版
+
+      - name: Log in to the Container registry  # 步骤2：登录容器注册表
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1  # 指定commit hash确保稳定性
+        with:  # 输入参数
+          registry: ${{ env.REGISTRY }}  # 使用环境变量中的注册表地址
+          username: ${{ github.actor }}  # 使用触发工作流的GitHub用户名
+          password: ${{ secrets.GITHUB_TOKEN }}  # 使用自动生成的GITHUB_TOKEN
+
+      - name: Extract metadata (tags, labels) for Docker  # 步骤3：提取Docker元数据
+        id: meta  # 步骤标识符（供后续步骤引用）
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7  # 元数据action固定版本
+        with:  # 输入参数
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}  # 生成完整镜像地址
+
+      - name: Build and push Docker image  # 步骤4：构建并推送镜像
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4  # 构建推送action固定版本
+        with:  # 输入参数
+          context: .  # 使用当前目录作为构建上下文
+          push: true  # 构建完成后自动推送镜像
+          tags: ${{ steps.meta.outputs.tags }}  # 从meta步骤获取生成的标签
+          labels: ${{ steps.meta.outputs.labels }}  # 从meta步骤获取生成的标签
