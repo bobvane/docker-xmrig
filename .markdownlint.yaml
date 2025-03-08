@@ -1,12 +1,12 @@
-MD010:
-  code_blocks: true
+MD010:  # 配置MD010规则（禁止硬制表符）
+  code_blocks: true  # 在代码块中也禁止使用制表符(Tab)
 
-MD013:
-  line_length: 120
-  heading_line_length: 80
-  code_block_line_length: 80
-  code_blocks: true
-  tables: true
-  headings: true
-  strict: false
-  stern: false
+MD013:  # 配置MD013规则（行长度限制）
+  line_length: 120  # 普通文本行最大允许120个字符
+  heading_line_length: 80  # 标题行最大允许80个字符
+  code_block_line_length: 80  # 代码块行最大允许80个字符
+  code_blocks: true  # 对代码块启用行长度检查
+  tables: true  # 对表格启用行长度检查
+  headings: true  # 对标题启用行长度检查
+  strict: false  # 不启用严格模式（允许适当超限）
+  stern: false  # 不启用严格警告模式（仅提示不阻断）
