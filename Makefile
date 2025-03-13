@@ -1,11 +1,11 @@
 # 版本定义
-VERSION = 6.20.0  # XMRig主程序版本
-CUDA_PLUGIN_VERSION=6.17.0  # CUDA插件版本
-CUDA_VERSION=11-4  # CUDA工具包版本
+VERSION = 6.22.2  # XMRig主程序版本
+# CUDA_PLUGIN_VERSION=6.17.0  # CUDA插件版本
+# CUDA_VERSION=11-4  # CUDA工具包版本
 REL = $(VERSION)-local  # 镜像标签后缀
 THREADS = $(shell nproc)  # 自动获取CPU核心数
 PRIORITY = 0  # 默认进程优先级
-REPO=docker.io/metal3d/xmrig  # 镜像仓库地址
+REPO=docker.io/bobvane/xmrig  # 镜像仓库地址
 CC=podman  # 指定使用podman代替docker
 
 # Docker Hub API地址（未使用）
