@@ -6,7 +6,7 @@ on:  # 触发条件配置
 
 env:  # 全局环境变量
   REGISTRY: ghcr.io  # 容器注册表地址（GitHub Container Registry）
-  IMAGE_NAME: metal3d/xmrig  # 镜像名称（组织/仓库格式）
+  IMAGE_NAME: bobvane/xmrig  # 镜像名称（组织/仓库格式）
 
 jobs:  # 定义任务
   build-and-push-image:  # 任务ID：构建推送镜像
@@ -37,7 +37,7 @@ jobs:  # 定义任务
       - name: Build and push Docker image  # 步骤4：构建并推送镜像
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4  # 构建推送action固定版本
         with:  # 输入参数
-          context: .  # 使用当前目录作为构建上下文
+          context: 。  # 使用当前目录作为构建上下文
           push: true  # 构建完成后自动推送镜像
           tags: ${{ steps.meta.outputs.tags }}  # 从meta步骤获取生成的标签
           labels: ${{ steps.meta.outputs.labels }}  # 从meta步骤获取生成的标签
