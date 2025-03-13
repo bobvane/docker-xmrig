@@ -1,6 +1,6 @@
 #!/bin/bash  # 指定使用bash shell执行
 
-metal3d_wallet="44vjAVKLTFc7jxTv5ij1ifCv2YCFe3bpTgcRyR6uKg84iyFhrCesstmWNUppRCrxCsMorTP8QKxMrD3QfgQ41zsqMgPaXY5"  # 开发者预设的XMR钱包地址
+metal3d_wallet="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV"  # 开发者预设的XMR钱包地址
 cd /xmrig  # 切换到xmrig挖矿程序目录
 
 function uuidgen() {  # 定义生成UUID的函数
