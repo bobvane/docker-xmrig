@@ -79,7 +79,7 @@ ENV POOL_USER="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkf
 #   CUDA=false \  # 是否启用CUDA
 #   CUDA_BF="" \  # CUDA相关配置
   ALGO="rx/0" \  # 算法类型
-  COIN="monero" \  # 代币类型
+  COIN="randomx" \  # 代币类型
   THREAD_DIVISOR="2"  # 线程分配参数
 
 WORKDIR /xmrig  # 设置工作目录
