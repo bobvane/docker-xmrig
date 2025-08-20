@@ -13,12 +13,7 @@ RUN set -xe; \
   tar xf xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
   mv xmrig-${XMRIG_VERSION#v} /xmrig; \
   cd /xmrig; \
-  mkdir build; \
-  cd scripts; \
-  ./build_deps.sh; \
-  cd ../build; \
-  cmake .. -DXMRIG_DEPS=scripts/deps; \
-  make -j $(nproc);
+  mkdir build;
 
 RUN set -xe; \
   cd /xmrig; \
