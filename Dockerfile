@@ -9,11 +9,16 @@ RUN set -xe; \
   update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100; \
   update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100; \
   rm -rf /var/lib/apt/lists/*; \
-  wget https://github.com/xmrig/xmrig/releases/download/${XMRIG_VERSION}/xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
-  tar xf xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
+  wget https://github.com/xmrig/xmrig/archive/refs/tags/${XMRIG_VERSION}.tar.gz; \
+  tar xf ${XMRIG_VERSION}.tar.gz; \
   mv xmrig-${XMRIG_VERSION#v} /xmrig; \
   cd /xmrig; \
-  mkdir build;
+  mkdir build; \
+  cd scripts; \
+  ./build_deps.sh; \
+  cd ../build; \
+  cmake .. -DXMRIG_DEPS=scripts/deps; \
+  make -j $(nproc);
 
 RUN set -xe; \
   cd /xmrig; \
