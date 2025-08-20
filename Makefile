@@ -1,6 +1,6 @@
 VERSION = 6.24.0
 CUDA_PLUGIN_VERSION = 6.24.0  # 替换为 xmrig-cuda 最新版本，需确认
-CUDA_VERSION = 11-4
+CUDA_VERSION = 6.22.1
 REL = $(VERSION)-local
 THREADS = 3  # 与 Dockerfile 的 THREADS=3 一致
 PRIORITY = 5  # 与 Dockerfile 的 PRIORITY=5 一致
