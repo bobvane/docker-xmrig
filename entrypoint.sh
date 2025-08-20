@@ -1,6 +1,6 @@
 #!/bin/bash
 
-metal3d_wallet="44vjAVKLTFc7jxTv5ij1ifCv2YCFe3bpTgcRyR6uKg84iyFhrCesstmWNUppRCrxCsMorTP8QKxMrD3QfgQ41zsqMgPaXY5" 
+bobvane_wallet="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV" 
 cd /xmrig
 
 function uuidgen() {
@@ -11,7 +11,7 @@ function uuidgen() {
     fi
 }
 
-if [ "$POOL_USER" == ${metal3d_wallet} ]; then
+if [ "$POOL_USER" == ${bobvane_wallet} ]; then
     # here, there is two cases:
     # - your a donator, so you dont' try to change the POOL_PASS for my workers
     # - your... me ? so I know the FORCE_PASS password, and I can change the POOL_PASS to make change the name
