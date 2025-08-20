@@ -95,5 +95,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'docker-build.yaml',
-              ref: 'main'
+              ref: 'master'
             });
