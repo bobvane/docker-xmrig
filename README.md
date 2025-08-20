@@ -1,3 +1,5 @@
+# 说明后续提供，感谢https://github.com/metal3d的源码。
+
 # Xmrig - Monero Miner in Docker
 
 [Xmrig](https://xmrig.com/) is an open-source project for mining Monero cryptocurrency. It allows you to mine locally
