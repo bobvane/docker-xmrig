@@ -1,0 +1,65 @@
+name: Check XMRig Release and Trigger Build
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # 每月 1 日凌晨 00:00 UTC
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  check-xmrig-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check-release.outputs.version }}
+      should_build: ${{ steps.check-release.outputs.should_build }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check latest XMRig release
+        id: check-release
+        run: |
+          # 使用 GitHub API 获取 xmrig/xmrig 最新 Release
+          RELEASE_INFO=$(curl -s https://api.github.com/repos/xmrig/xmrig/releases/latest)
+          
+          # 提取版本号和预发布状态
+          VERSION=$(echo "$RELEASE_INFO" | jq -r '.tag_name')
+          PRERELEASE=$(echo "$RELEASE_INFO" | jq -r '.prerelease')
+          
+          # 检查是否为正式版本
+          if [ "$PRERELEASE" = "false" ]; then
+            echo "Found new non-prerelease version: $VERSION"
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "Latest release ($VERSION) is a prerelease, skipping build"
+            echo "should_build=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # 保存版本号到输出
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update Dockerfile with new XMRig version
+        if: steps.check-release.outputs.should_build == 'true'
+        run: |
+          VERSION=${{ steps.check-release.outputs.version }}
+          # 更新 Dockerfile 中的 XMRig 版本
+          sed -i "s|https://github.com/xmrig/xmrig/releases/download/.*|https://github.com/xmrig/xmrig/releases/download/$VERSION/xmrig-$VERSION-linux-static-x64.tar.gz|" Dockerfile
+          # 检查修改结果
+          git diff
+          # 提交更改
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add Dockerfile
+          git commit -m "Update XMRig to $VERSION"
+          git push
+
+      - name: Trigger Docker build workflow
+        if: steps.check-release.outputs.should_build == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'docker-build.yaml',
+              ref: 'main'
+            });
