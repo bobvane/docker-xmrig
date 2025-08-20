@@ -1,8 +1,9 @@
 #!/bin/bash
+set -e
 
-bobvane_wallet="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV" 
 cd /xmrig
 
+# 生成 UUID（用于 ACCESS_TOKEN 或 WORKERNAME）
 function uuidgen() {
     if [ -x "$(command -v uuidgen)" ]; then
         uuidgen
@@ -11,107 +12,90 @@ function uuidgen() {
     fi
 }
 
-if [ "$POOL_USER" == ${bobvane_wallet} ]; then
-    # here, there is two cases:
-    # - your a donator, so you dont' try to change the POOL_PASS for my workers
-    # - your... me ? so I know the FORCE_PASS password, and I can change the POOL_PASS to make change the name
-    if [ "$FORCE_PASS" != "" ]; then
-        # this is only for me, metal3d, to be able to use my own wallet
-        # and setup my own POOL_PASS
-        echo "Checking SHA"
-        sha=$(echo -n "$FORCE_PASS" | sha256sum | awk '{print $1}')
-        if [ $sha != "aa60f2dd8fc94aac236a7b804a7efa6e992c2b77f9e830bb525b3fd52ccbd7a1" ]; then
-            echo
-            echo -e "\033[31mERROR, SHA256 of your password is not reconized, so you can't change the password of Metal3d miner\033[0m"
-            exit 1
-        fi
-        echo -e "\033[32mSHA verified\033[0m"
-        echo "Worker name is $POOL_PASS"
-    else
-        # there, it's for donators, so the password is "donator + uuid"
-        POOL_PASS="donator-$(uuidgen)"
-        echo
-        echo -e "\033[36mYour a donator 💝\033[0m Thanks a lot, your donation id is \033[34m$POOL_PASS\033[0m"
-        echo "Give that id to me if you want to know something, and send mail to me: metal3d _at_ gmail"
-        echo
-        echo -e "\033[31mTo mine for your own account, please provide your wallet address and change environment variables\033[0m"
-        echo "- POOL_USER=your wallet address"
-        echo "- POOL_PASS=password if needed, default is 'donator'+uuid => $POOL_PASS"
-        echo "- POOL_URL=url to a pool server => $POOL_URL"
-        echo
-    fi
-fi
-
-
-# API access token to get xmrig information
-if [ "$ACCESS_TOKEN" == "" ]; then
+# 设置 ACCESS_TOKEN（用于 XMRig HTTP API）
+if [ -z "$ACCESS_TOKEN" ]; then
     ACCESS_TOKEN=$(uuidgen)
-    echo
-    echo -e "You didn't set ACCESS_TOKEN environment variable,"
-    echo -e "we generated that one: \033[32m${ACCESS_TOKEN}\033[0m"
-    echo 
-    echo -e "\033[31m ⚠ Warning, this token will change the next time you will restart docker container, it's recommended to provide one and keep it secret\033[0m"
-    echo 
+    echo "ACCESS_TOKEN not set, generated: $ACCESS_TOKEN"
+    echo "Warning: This token will change on container restart. Set ACCESS_TOKEN environment variable for persistence."
 fi
 
-if [ "${POOL_PASS}" != "" ]; then
-    PASS_OPTS="--pass=${POOL_PASS}"
+# 设置 POOL_PASS
+PASS_OPTS=""
+if [ -n "$POOL_PASS" ]; then
+    PASS_OPTS="--pass=$POOL_PASS"
 fi
 
-
-THREAD_OPTS="-t $(($(nproc)/2))"
-if [ "$THREADS" -gt 0 ]; then
+# 设置线程数（优先使用 THREADS，默认为 CPU 核心数除以 THREAD_DIVISOR）
+THREAD_OPTS="-t $(($(nproc)/${THREAD_DIVISOR:-2}))"
+if [ "$THREADS" -gt 0 ] 2>/dev/null; then
     THREAD_OPTS="-t $THREADS"
 fi
 
+# 设置 CPU 优先级（范围 0-5）
 CPU_PRIORITY="0"
-if [ "$PRIORITY" -ge 0 ] && [ "$PRIORITY" -le 5 ]; then
-    CPU_PRIORITY=$PRIORITY
+if [ "$PRIORITY" -ge 0 ] && [ "$PRIORITY" -le 5 ] 2>/dev/null; then
+    CPU_PRIORITY="$PRIORITY"
 fi
 
-
-if [ "$ALGO" != "" ] && [ "$COIN" == "" ] ; then
-    OTHERS_OPTS=$OTHERS_OPTS" --algo=$ALGO"
-elif [ "$COIN" != "" ]; then
-    OTHERS_OPTS=$OTHERS_OPTS" --coin=$COIN"
+# 设置算法或币种
+OTHERS_OPTS=""
+if [ -n "$ALGO" ] && [ -z "$COIN" ]; then
+    OTHERS_OPTS="$OTHERS_OPTS --algo=$ALGO"
+elif [ -n "$COIN" ]; then
+    OTHERS_OPTS="$OTHERS_OPTS --coin=$COIN"
 fi
 
-if [ "$CUDA_BF" != "" ]; then
-    OTHERS_OPTS=$OTHERS_OPTS" --cuda-bfactor=$CUDA_BF"
+# 设置 CUDA bfactor
+if [ -n "$CUDA_BF" ]; then
+    OTHERS_OPTS="$OTHERS_OPTS --cuda-bfactor=$CUDA_BF"
 fi
 
-if [ "${NO_CPU}" == "true" ]; then
-    OTHERS_OPTS=$OTHERS_OPTS" --no-cpu"
+# 禁用 CPU
+if [ "$NO_CPU" = "true" ]; then
+    OTHERS_OPTS="$OTHERS_OPTS --no-cpu"
 fi
 
-if [ "$WORKERNAME" == "" ]; then
-    WORKERNAME="worker_${RANDOM}"
+# 设置工作节点名称
+if [ -z "$WORKERNAME" ]; then
+    WORKERNAME="worker_$(uuidgen)"
+fi
+OTHERS_OPTS="$OTHERS_OPTS -p $WORKERNAME"
+
+# 配置 CUDA
+if [ "$CUDA" = "true" ]; then
+    OTHERS_OPTS="$OTHERS_OPTS --cuda"
+    jq '.cuda.enabled = true | .cpu.enabled = false' config.json > config.json.tmp && mv config.json.tmp config.json
 fi
 
-OTHERS_OPTS=$OTHERS_OPTS" -p ${WORKERNAME}"
-
-if [ "${CUDA}" == "true" ]; then
-    OTHERS_OPTS=$OTHERS_OPTS" --cuda"
-    jq '.cuda.enabled = true' config.json > config.json.tmp && mv config.json.tmp config.json
-    jq '.cpu.enabled = false' config.json > config.json.tmp && mv config.json.tmp config.json
-fi
-
-if [ "${OPENCL}"  == "true" ]; then
-    apt update && apt install -y nvidia-opencl-dev
+# 配置 OpenCL
+if [ "$OPENCL" = "true" ]; then
+    apt-get update && apt-get install -y nvidia-opencl-dev
     jq '.opencl.enabled = true' config.json > config.json.tmp && mv config.json.tmp config.json
-    OTHERS_OPTS=$OTHERS_OPTS" --opencl"
+    OTHERS_OPTS="$OTHERS_OPTS --opencl"
 fi
 
+# 更新 config.json
+if [ -f config.json ]; then
+    jq --arg pool_url "$POOL_URL" \
+       --arg pool_user "$POOL_USER" \
+       --arg pool_pass "$POOL_PASS" \
+       --arg donate_level "$DONATE_LEVEL" \
+       '.pools[0].url = $pool_url | .pools[0].user = $pool_user | .pools[0].pass = $pool_pass | .donate-level = ($donate_level | tonumber)' \
+       config.json > config.json.tmp && mv config.json.tmp config.json
+else
+    echo "Error: config.json not found"
+    exit 1
+fi
 
-# if no arguments, run xmrig with default options
-if [ $# -eq 1 ] && [ "$@" == "xmrig" ] ; then
-    exec $@ --user=${POOL_USER} --url=${POOL_URL} ${PASS_OPTS} ${THREAD_OPTS} \
-        --cpu-priority=${CPU_PRIORITY} \
-        --donate-level=$DONATE_LEVEL \
+# 运行 XMRig
+if [ $# -eq 1 ] && [ "$1" = "xmrig" ]; then
+    exec xmrig --user="$POOL_USER" --url="$POOL_URL" $PASS_OPTS $THREAD_OPTS \
+        --cpu-priority="$CPU_PRIORITY" \
+        --donate-level="$DONATE_LEVEL" \
         --http-port=3000 --http-host=0.0.0.0 --http-enabled \
-        --http-access-token=${ACCESS_TOKEN} \
+        --http-access-token="$ACCESS_TOKEN" \
         --nicehash \
-        ${OTHERS_OPTS}
+        $OTHERS_OPTS
 else
     exec "$@"
 fi
