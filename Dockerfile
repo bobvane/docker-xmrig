@@ -14,7 +14,7 @@ RUN set -xe; \
   update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100; \
   wget https://github.com/xmrig/xmrig-cuda/archive/refs/tags/v${CUDA_PLUGIN_VERSION}.tar.gz; \
   tar xf v${CUDA_PLUGIN_VERSION}.tar.gz; \
-  mv xmrig-cuda-${CUDA_PLUGIN_VERSION} xmrig-cuda; \
+  mv xmrig-cuda-${CUDA_PLUGIN_VERSION#v} xmrig-cuda; \
   cd xmrig-cuda; \
   mkdir build; \
   cd build; \
@@ -35,7 +35,7 @@ RUN set -xe; \
   rm -rf /var/lib/apt/lists/*; \
   wget https://github.com/xmrig/xmrig/archive/refs/tags/v${XMRIG_VERSION}.tar.gz; \
   tar xf v${XMRIG_VERSION}.tar.gz; \
-  mv xmrig-${XMRIG_VERSION} /xmrig; \
+  mv xmrig-${XMRIG_VERSION#v} /xmrig; \
   cd /xmrig; \
   mkdir build; \
   cd scripts; \
