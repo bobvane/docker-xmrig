@@ -59,7 +59,7 @@ if [ "${POOL_PASS}" != "" ]; then
 fi
 
 
-THREAD_OPTS="-t $(($(nproc) / $THREAD_DIVISOR))"
+THREAD_OPTS="-t $(($(nproc)/2))"
 if [ "$THREADS" -gt 0 ]; then
     THREAD_OPTS="-t $THREADS"
 fi
@@ -91,7 +91,7 @@ fi
 OTHERS_OPTS=$OTHERS_OPTS" -p ${WORKERNAME}"
 
 if [ "${CUDA}" == "true" ]; then
-    OTHERS_OPTS=$OTHERS_OPTS" --cuda --cuda-loader=/usr/local/lib/libxmrig-cuda.so"
+    OTHERS_OPTS=$OTHERS_OPTS" --cuda"
     jq '.cuda.enabled = true' config.json > config.json.tmp && mv config.json.tmp config.json
     jq '.cpu.enabled = false' config.json > config.json.tmp && mv config.json.tmp config.json
 fi
