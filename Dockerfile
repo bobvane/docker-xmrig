@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 as build-cuda-plugin
 LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
 
-ARG CUDA_VERSION=v6.22.1
+ARG CUDA_VERSION=12-9
 RUN set -xe; \
   apt-get update; \
   apt-get install -y nvidia-cuda-toolkit;
