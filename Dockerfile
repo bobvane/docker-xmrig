@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 as build-cuda-plugin
-LABEL maintainer="Patrice Ferlet <metal3d@gmail.com>"
+LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
 
-ARG CUDA_VERSION=11-4
+ARG CUDA_VERSION=v6.22.1
 RUN set -xe; \
   apt-get update; \
   apt-get install -y nvidia-cuda-toolkit;
@@ -24,7 +24,7 @@ RUN set -xe; \
 
 FROM ubuntu:22.04 as build-runner
 ARG XMRIG_VERSION=v6.24.0
-LABEL maintainer="Patrice Ferlet <metal3d@gmail.com>"
+LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
 
 RUN set -xe; \
   apt-get update; \
@@ -50,9 +50,9 @@ RUN set -xe; \
 
 
 FROM ubuntu:22.04 as runner
-LABEL maintainer="Patrice Ferlet <metal3d@gmail.com>"
-LABEL org.opencontainers.image.source="https://github.com/metal3d/docker-xmrig"
-LABEL org.opencontainers.image.description="XMRig miner with CUDA support on Docker, Podman, Kubernetes..." 
+LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
+LABEL org.opencontainers.image.source="https://github.com/bobvane/docker-xmrig"
+LABEL org.opencontainers.image.description="XMRig miner with CUDA support for Bob Vane's project" 
 LABEL org.opencontainers.image.licenses="MIT"
 RUN set -xe; \
   mkdir /xmrig; \
@@ -65,22 +65,23 @@ COPY --from=build-runner /xmrig/src/config.json /xmrig/config.json
 COPY --from=build-cuda-plugin /xmrig-cuda/build/libxmrig-cuda.so /usr/local/lib/
 
 
-ENV POOL_USER="44vjAVKLTFc7jxTv5ij1ifCv2YCFe3bpTgcRyR6uKg84iyFhrCesstmWNUppRCrxCsMorTP8QKxMrD3QfgQ41zsqMgPaXY5" \
+ENV POOL_USER="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV" \
   POOL_PASS="" \
-  POOL_URL="xmr.metal3d.org:8080" \
-  DONATE_LEVEL=5 \
-  PRIORITY=0 \
-  THREADS=0 \
+  POOL_URL="stratum+ssl://auto.c3pool.org:33333" \
+  DONATE_LEVEL=0 \
+  PRIORITY=5 \
+  THREADS=3 \
   PATH="/xmrig:${PATH}" \
   CUDA=false \
   CUDA_BF="" \
-  ALGO="" \
-  COIN="" \
+  ALGO="rx/0" \
+  COIN="XMR" \
+  WORKERNAME="NASCPU" \
   THREAD_DIVISOR="2"
 
 WORKDIR /xmrig
 COPY entrypoint.sh /entrypoint.sh
 WORKDIR /tmp
-EXPOSE 3000
+EXPOSE 4000
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["xmrig"]
