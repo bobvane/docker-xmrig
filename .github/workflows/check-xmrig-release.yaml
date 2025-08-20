@@ -8,6 +8,8 @@ on:
 jobs:
   check-xmrig-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 需要写入权限以推送 Dockerfile 更改
     outputs:
       version: ${{ steps.check-release.outputs.version }}
       should_build: ${{ steps.check-release.outputs.should_build }}
@@ -37,20 +39,48 @@ jobs:
           # 保存版本号到输出
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Debug Dockerfile before update
+        if: steps.check-release.outputs.should_build == 'true'
+        run: |
+          echo "Current Dockerfile content:"
+          cat Dockerfile
+
       - name: Update Dockerfile with new XMRig version
         if: steps.check-release.outputs.should_build == 'true'
         run: |
           VERSION=${{ steps.check-release.outputs.version }}
-          # 更新 Dockerfile 中的 XMRig 版本
-          sed -i "s|https://github.com/xmrig/xmrig/releases/download/.*|https://github.com/xmrig/xmrig/releases/download/$VERSION/xmrig-$VERSION-linux-static-x64.tar.gz|" Dockerfile
+          # 替换 XMRIG_VERSION 和 CUDA_PLUGIN_VERSION
+          if grep -q "ARG XMRIG_VERSION=" Dockerfile; then
+            sed -i "s|ARG XMRIG_VERSION=.*|ARG XMRIG_VERSION=$VERSION|" Dockerfile
+            echo "Updated XMRIG_VERSION to $VERSION"
+          else
+            echo "Error: ARG XMRIG_VERSION not found in Dockerfile"
+            exit 1
+          fi
+          if grep -q "ARG CUDA_PLUGIN_VERSION=" Dockerfile; then
+            sed -i "s|ARG CUDA_PLUGIN_VERSION=.*|ARG CUDA_PLUGIN_VERSION=$VERSION|" Dockerfile
+            echo "Updated CUDA_PLUGIN_VERSION to $VERSION"
+          else
+            echo "Error: ARG CUDA_PLUGIN_VERSION not found in Dockerfile"
+            exit 1
+          fi
           # 检查修改结果
-          git diff
-          # 提交更改
+          echo "Changes in Dockerfile:"
+          git diff || true
+
+      - name: Commit and push Dockerfile changes
+        if: steps.check-release.outputs.should_build == 'true'
+        run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add Dockerfile
-          git commit -m "Update XMRig to $VERSION"
-          git push
+          # 检查是否有更改需要提交
+          if git diff --staged --quiet; then
+            echo "No changes in Dockerfile, skipping commit"
+          else
+            git commit -m "Update XMRig and CUDA plugin to ${{ steps.check-release.outputs.version }}"
+            git push
+          fi
 
       - name: Trigger Docker build workflow
         if: steps.check-release.outputs.should_build == 'true'
