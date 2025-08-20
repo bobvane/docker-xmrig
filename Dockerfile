@@ -9,7 +9,7 @@ RUN set -xe; \
   update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100; \
   update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100; \
   rm -rf /var/lib/apt/lists/*; \
-  wget https://github.com/xmrig/xmrig/releases/download/v${XMRIG_VERSION#v}/xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
+  wget https://github.com/xmrig/xmrig/releases/download/${XMRIG_VERSION}/xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
   tar xf xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
   mv xmrig-${XMRIG_VERSION#v} /xmrig; \
   cd /xmrig; \
