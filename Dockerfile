@@ -61,7 +61,7 @@ RUN set -xe; \
   apt-get -y install libnvidia-compute-535 libnvrtc11.2; \
   rm -rf /var/lib/apt/lists/*
 COPY --from=build-runner /xmrig/xmrig /xmrig/xmrig
-COPY --from=build-runner /xmrig/src/config.json /xmrig/config.json
+COPY --from=build-runner /xmrig/config.json /xmrig/config.json
 COPY --from=build-cuda-plugin /xmrig-cuda/build/libxmrig-cuda.so /usr/local/lib/
 
 
