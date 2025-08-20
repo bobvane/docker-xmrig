@@ -1,27 +1,3 @@
-FROM ubuntu:22.04 as build-cuda-plugin
-LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
-
-ARG CUDA_VERSION=12-9
-RUN set -xe; \
-  apt-get update; \
-  apt-get install -y nvidia-cuda-toolkit;
-
-ARG CUDA_PLUGIN_VERSION=v6.22.1
-RUN set -xe; \
-  apt-get install -y wget build-essential cmake automake libtool autoconf; \
-  apt-get install -y gcc-9 g++-9; \
-  update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100; \
-  update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100; \
-  wget https://github.com/xmrig/xmrig-cuda/archive/refs/tags/v${CUDA_PLUGIN_VERSION}.tar.gz; \
-  tar xf v${CUDA_PLUGIN_VERSION}.tar.gz; \
-  mv xmrig-cuda-${CUDA_PLUGIN_VERSION#v} xmrig-cuda; \
-  cd xmrig-cuda; \
-  mkdir build; \
-  cd build; \
-  cmake .. -DCUDA_LIB=/usr/lib/x86_64-linux-gnu/stubs/libcuda.so -DCUDA_TOOLKIT_ROOT_DIR=/usr/lib/x86_64-linux-gnu -DCUDA_ARCH="75;80"; \
-  make -j $(nproc);
-
-
 FROM ubuntu:22.04 as build-runner
 ARG XMRIG_VERSION=v6.24.0
 LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
@@ -33,8 +9,8 @@ RUN set -xe; \
   update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100; \
   update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100; \
   rm -rf /var/lib/apt/lists/*; \
-  wget https://github.com/xmrig/xmrig/archive/refs/tags/v${XMRIG_VERSION}.tar.gz; \
-  tar xf v${XMRIG_VERSION}.tar.gz; \
+  wget https://github.com/xmrig/xmrig/releases/download/v${XMRIG_VERSION#v}/xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
+  tar xf xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
   mv xmrig-${XMRIG_VERSION#v} /xmrig; \
   cd /xmrig; \
   mkdir build; \
