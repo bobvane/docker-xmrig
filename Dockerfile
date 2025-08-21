@@ -23,7 +23,7 @@ RUN set -xe; \
     rm -rf /var/lib/apt/lists/*;
 
 COPY --from=build-runner /xmrig/xmrig /xmrig/xmrig
-COPY --from=build-runner /xmrig/config.json /xmrig/config.json
+COPY --from=build-runner /xmrig/src/config.json /xmrig/config.json
 
 ENV POOL_USER="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV" \
     POOL_PASS="" \
