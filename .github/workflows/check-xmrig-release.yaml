@@ -95,5 +95,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'docker-build.yaml',
-              ref: 'master'
+              ref: 'master',
+              inputs: {
+                version: '${{ steps.check-release.outputs.version }}'
+              }
             });
