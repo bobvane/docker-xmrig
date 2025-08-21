@@ -6,8 +6,8 @@ RUN set -xe; \
     apt-get update; \
     apt-get install -y wget; \
     rm -rf /var/lib/apt/lists/*; \
-    wget --tries=3 https://github.com/xmrig/xmrig/releases/download/${XMRIG_VERSION}/xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz || { echo 'wget failed' >&2; exit 1; }; \
-    tar xf xmrig-${XMRIG_VERSION#v}-linux-static-x64.tar.gz; \
+    wget https://github.com/xmrig/xmrig/archive/refs/tags/${XMRIG_VERSION}.tar.gz; \
+    tar xf ${XMRIG_VERSION}.tar.gz; \
     mv xmrig-${XMRIG_VERSION#v} /xmrig;
 
 FROM ubuntu:22.04 as runner
