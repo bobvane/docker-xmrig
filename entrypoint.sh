@@ -45,34 +45,11 @@ elif [ -n "$COIN" ]; then
     OTHERS_OPTS="$OTHERS_OPTS --coin=$COIN"
 fi
 
-# 设置 CUDA bfactor
-if [ -n "$CUDA_BF" ]; then
-    OTHERS_OPTS="$OTHERS_OPTS --cuda-bfactor=$CUDA_BF"
-fi
-
-# 禁用 CPU
-if [ "$NO_CPU" = "true" ]; then
-    OTHERS_OPTS="$OTHERS_OPTS --no-cpu"
-fi
-
 # 设置工作节点名称
 if [ -z "$WORKERNAME" ]; then
     WORKERNAME="worker_$(uuidgen)"
 fi
 OTHERS_OPTS="$OTHERS_OPTS -p $WORKERNAME"
-
-# 配置 CUDA
-if [ "$CUDA" = "true" ]; then
-    OTHERS_OPTS="$OTHERS_OPTS --cuda"
-    jq '.cuda.enabled = true | .cpu.enabled = false' config.json > config.json.tmp && mv config.json.tmp config.json
-fi
-
-# 配置 OpenCL
-if [ "$OPENCL" = "true" ]; then
-    apt-get update && apt-get install -y nvidia-opencl-dev
-    jq '.opencl.enabled = true' config.json > config.json.tmp && mv config.json.tmp config.json
-    OTHERS_OPTS="$OTHERS_OPTS --opencl"
-fi
 
 # 更新 config.json
 if [ -f config.json ]; then
