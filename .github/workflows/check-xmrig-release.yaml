@@ -52,12 +52,19 @@ jobs:
         if: steps.check-release.outputs.should_build == 'true'
         run: |
           VERSION=${{ steps.check-release.outputs.version }}
-          # 替换 XMRIG_VERSION
+          # 替换 XMRIG_VERSION 和 CUDA_PLUGIN_VERSION
           if grep -q "ARG XMRIG_VERSION=" Dockerfile; then
             sed -i "s|ARG XMRIG_VERSION=.*|ARG XMRIG_VERSION=$VERSION|" Dockerfile
             echo "Updated XMRIG_VERSION to $VERSION"
           else
             echo "Error: ARG XMRIG_VERSION not found in Dockerfile"
+            exit 1
+          fi
+          if grep -q "ARG CUDA_PLUGIN_VERSION=" Dockerfile; then
+            sed -i "s|ARG CUDA_PLUGIN_VERSION=.*|ARG CUDA_PLUGIN_VERSION=$VERSION|" Dockerfile
+            echo "Updated CUDA_PLUGIN_VERSION to $VERSION"
+          else
+            echo "Error: ARG CUDA_PLUGIN_VERSION not found in Dockerfile"
             exit 1
           fi
           # 检查修改结果
@@ -74,7 +81,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes in Dockerfile, skipping commit"
           else
-            git commit -m "Update XMRig to ${{ steps.check-release.outputs.version }}"
+            git commit -m "Update XMRig and CUDA plugin to ${{ steps.check-release.outputs.version }}"
             git push
           fi
 
@@ -88,8 +95,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'docker-build.yaml',
-              ref: 'master',
-              inputs: {
-                version: '${{ steps.check-release.outputs.version }}'
-              }
+              ref: 'master'
             });
