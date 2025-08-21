@@ -69,7 +69,7 @@ if [ $# -eq 1 ] && [ "$1" = "xmrig" ]; then
     exec xmrig --user="$POOL_USER" --url="$POOL_URL" $PASS_OPTS $THREAD_OPTS \
         --cpu-priority="$CPU_PRIORITY" \
         --donate-level="$DONATE_LEVEL" \
-        --http-port=3000 --http-host=0.0.0.0 --http-enabled \
+        --http-port=4000 --http-host=0.0.0.0 --http-enabled \
         --http-access-token="$ACCESS_TOKEN" \
         --nicehash \
         $OTHERS_OPTS
