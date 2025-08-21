@@ -1,6 +1,6 @@
 # 说明后续提供，感谢https://github.com/metal3d 的源码。
 
-# Xmrig - Monero Miner in Docker
+# Xmrig - 挂Nas的Docker中使用CPU挖掘门罗币工具
 
 [Xmrig](https://xmrig.com/) is an open-source project for mining Monero cryptocurrency. It allows you to mine locally
 for a pool and receive Monero for your efforts.
