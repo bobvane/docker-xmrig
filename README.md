@@ -1,4 +1,4 @@
-# 说明后续提供，感谢https://github.com/metal3d的源码。
+# 说明后续提供，感谢https://github.com/metal3d 的源码。
 
 # Xmrig - Monero Miner in Docker
 
