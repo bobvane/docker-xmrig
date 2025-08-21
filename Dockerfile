@@ -28,7 +28,7 @@ RUN set -xe; \
 FROM ubuntu:22.04 as runner
 LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/bobvane/docker-xmrig"
-LABEL org.opencontainers.image.description="XMRig miner with CUDA support for Bob Vane's project" 
+LABEL org.opencontainers.image.description="XMRig miner with CPU support for Bob Vane's project" 
 LABEL org.opencontainers.image.licenses="MIT"
 RUN set -xe; \
   mkdir /xmrig; \
@@ -47,6 +47,8 @@ ENV POOL_USER="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkf
   PRIORITY=5 \
   THREADS=3 \
   PATH="/xmrig:${PATH}" \
+  CUDA=false \
+  CUDA_BF="" \
   ALGO="rx/0" \
   COIN="XMR" \
   WORKERNAME="NASCPU" \
