@@ -28,7 +28,7 @@ RUN set -xe; \
 FROM ubuntu:22.04 as runner
 LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/bobvane/docker-xmrig"
-LABEL org.opencontainers.image.description="XMRig miner with CPU support for Bob Vane's project" 
+LABEL org.opencontainers.image.description="XMRig miner with CUDA support for Bob Vane's project" 
 LABEL org.opencontainers.image.licenses="MIT"
 RUN set -xe; \
   mkdir /xmrig; \
