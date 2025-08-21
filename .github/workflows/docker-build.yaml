@@ -1,9 +1,12 @@
 name: Create and publish a Docker image
 
 on:
-  push:
-    branches: [master]  # 支持 check-xmrig-release.yaml 推送触发
   workflow_dispatch:    # 支持手动触发
+    inputs:
+      version:
+        description: 'XMRig version'
+        type: string
+        required: false
 
 env:
   REGISTRY: docker.io
@@ -29,6 +32,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ inputs.version }}
+            type=raw,value=latest
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
