@@ -2,7 +2,7 @@ name: Check XMRig Release and Trigger Build
 
 on:
   schedule:
-    - cron: '0 0 1 * *'  # 每月 1 日凌晨 00:00 UTC
+    - cron: '0 0 * * 1'  # 每周一次
   workflow_dispatch:      # 允许手动触发
 
 jobs:
