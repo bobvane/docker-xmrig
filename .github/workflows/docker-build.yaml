@@ -1,12 +1,9 @@
 name: Create and publish a Docker image
 
 on:
+  push:
+    branches: [master]  # 支持 check-xmrig-release.yaml 推送触发
   workflow_dispatch:    # 支持手动触发
-    inputs:
-      version:
-        description: 'XMRig version'
-        type: string
-        required: false
 
 env:
   REGISTRY: docker.io
@@ -14,6 +11,7 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
       packages: write
@@ -31,9 +29,6 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ inputs.version }}
-            type=raw,value=latest
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -41,5 +36,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            XMRIG_VERSION=${{ inputs.version }}
