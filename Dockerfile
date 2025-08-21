@@ -1,61 +1,60 @@
-# ========= Build stage =========
 FROM ubuntu:22.04 as build-runner
 ARG XMRIG_VERSION=v6.24.0
 LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
 
-RUN set -xe && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        wget build-essential cmake automake libtool autoconf \
-        gcc-9 g++-9 git pkg-config libssl-dev libhwloc-dev && \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100 && \
-    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100 && \
-    rm -rf /var/lib/apt/lists/* && \
-    wget https://github.com/xmrig/xmrig/archive/refs/tags/${XMRIG_VERSION}.tar.gz && \
-    tar xf ${XMRIG_VERSION}.tar.gz && \
-    mv xmrig-${XMRIG_VERSION#v} /xmrig && \
-    cd /xmrig && \
-    mkdir build && \
-    cd scripts && ./build_deps.sh && \
-    cd ../build && \
-    cmake .. -DXMRIG_DEPS=scripts/deps && \
-    make -j$(nproc) && \
-    cp /xmrig/build/xmrig /xmrig/xmrig
+RUN set -xe; \
+  apt-get update; \
+  apt-get install -y wget build-essential cmake automake libtool autoconf; \
+  apt-get install -y gcc-9 g++-9; \
+  update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100; \
+  update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100; \
+  rm -rf /var/lib/apt/lists/*; \
+  wget https://github.com/xmrig/xmrig/archive/refs/tags/${XMRIG_VERSION}.tar.gz; \
+  tar xf ${XMRIG_VERSION}.tar.gz; \
+  mv xmrig-${XMRIG_VERSION#v} /xmrig; \
+  cd /xmrig; \
+  mkdir build; \
+  cd scripts; \
+  ./build_deps.sh; \
+  cd ../build; \
+  cmake .. -DXMRIG_DEPS=scripts/deps; \
+  make -j $(nproc);
 
-# ========= Runtime stage =========
+RUN set -xe; \
+  cd /xmrig; \
+  cp build/xmrig /xmrig
+
+
 FROM ubuntu:22.04 as runner
 LABEL maintainer="Bob Vane <wenbo007@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/bobvane/docker-xmrig"
 LABEL org.opencontainers.image.description="XMRig miner with CUDA support for Bob Vane's project" 
 LABEL org.opencontainers.image.licenses="MIT"
-
-RUN set -xe && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        jq libnvidia-compute-535 libnvrtc11.2 && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir /xmrig
-
+RUN set -xe; \
+  mkdir /xmrig; \
+  apt-get update; \
+  apt-get -y install jq; \
+  apt-get -y install libnvidia-compute-535 libnvrtc11.2; \
+  rm -rf /var/lib/apt/lists/*
 COPY --from=build-runner /xmrig/xmrig /xmrig/xmrig
-# ⚠️ 默认不拷贝 config.json，避免覆盖用户的配置
-# COPY --from=build-runner /xmrig/src/config.json /xmrig/config.json
+COPY --from=build-runner /xmrig/src/config.json /xmrig/config.json
+
 
 ENV POOL_USER="45t61HR6JGoXb9knXeCAGaUSxGhdJQjh4Td5LoopvvFwUQZbGSTDzXQSwmyXzDTkfDb46ex6gXPoN4rrfyjKSVenRbhH7kV" \
-    POOL_PASS="" \
-    POOL_URL="stratum+ssl://auto.c3pool.org:33333" \
-    DONATE_LEVEL=0 \
-    PRIORITY=5 \
-    THREADS=3 \
-    PATH="/xmrig:${PATH}" \
-    ALGO="rx/0" \
-    COIN="XMR" \
-    WORKERNAME="NASCPU" \
-    THREAD_DIVISOR="2"
+  POOL_PASS="" \
+  POOL_URL="stratum+ssl://auto.c3pool.org:33333" \
+  DONATE_LEVEL=0 \
+  PRIORITY=5 \
+  THREADS=3 \
+  PATH="/xmrig:${PATH}" \
+  ALGO="rx/0" \
+  COIN="XMR" \
+  WORKERNAME="NASCPU" \
+  THREAD_DIVISOR="2"
 
 WORKDIR /xmrig
-# 如果 entrypoint.sh 有环境变量替换逻辑 → 保留
 COPY entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
-
+WORKDIR /tmp
 EXPOSE 4000
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["xmrig"]
