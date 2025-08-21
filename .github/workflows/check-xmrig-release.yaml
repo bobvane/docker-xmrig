@@ -60,6 +60,13 @@ jobs:
             echo "Error: ARG XMRIG_VERSION not found in Dockerfile"
             exit 1
           fi
+          if grep -q "ARG CUDA_PLUGIN_VERSION=" Dockerfile; then
+            sed -i "s|ARG CUDA_PLUGIN_VERSION=.*|ARG CUDA_PLUGIN_VERSION=$VERSION|" Dockerfile
+            echo "Updated CUDA_PLUGIN_VERSION to $VERSION"
+          else
+            echo "Error: ARG CUDA_PLUGIN_VERSION not found in Dockerfile"
+            exit 1
+          fi
           # 检查修改结果
           echo "Changes in Dockerfile:"
           git diff || true
