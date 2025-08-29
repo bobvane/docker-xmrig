@@ -22,16 +22,16 @@ docker run --rm -it bobvane/xmrig:latest
 ```bash
 export POOL_URL="您的矿池 URL"
 export POOL_USER="您的门罗币地址"
-export POOL_PASS="某些矿池可以为空，否则将其用作矿工 ID"
-export DONATE_LEVEL="Xmrig 项目捐赠百分比，默认为 1"
-export PRIORITY="Xmrig 项目捐赠百分比，默认为 5"
-export THREADS="Xmrig 项目捐赠百分比，默认为 3"
+export POOL_PASS="某些矿池可以为空，否则将其用作矿工ID"
+export DONATE_LEVEL="Xmrig 项目捐赠百分比，默认为1"
+export PRIORITY="Xmrig 项目捐赠百分比，默认为5"
+export THREADS="Xmrig 项目捐赠百分比，默认为3"
 export CUDA="不支持显卡，默认为false"
 export CUDA_BF="不支持显卡，默认为false"
 export ALGO="算法，默认为rx/0"
 export COIN="币种，默认为XMR"
 export WORKERNAME="矿工名，默认为NASCPU"
-export THREAD_DIVISOR="Xmrig 项目捐赠百分比，默认为 1"
+export THREAD_DIVISOR="Xmrig 项目捐赠百分比，默认为2"
 
 # Update the image
 docker pull ghcr.io/metal3d/xmrig:latest
