@@ -1,4 +1,4 @@
-# 说明后续提供，感谢https://github.com/metal3d 的源码。
+# 先感谢https://github.com/metal3d 的源码。
 
 # Xmrig - 挂Nas的Docker中使用CPU挖掘门罗币工具
 
