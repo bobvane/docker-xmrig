@@ -21,6 +21,7 @@ jobs:
         id: get-version
         run: |
           XMRIG_VERSION=$(grep "ARG XMRIG_VERSION=" Dockerfile | cut -d'=' -f2)
+          echo "XMRIG_VERSION=${XMRIG_VERSION}"
           echo "xmrig_version=${XMRIG_VERSION}" >> $GITHUB_OUTPUT
       # 红色标记结束        
       - name: Log in to Docker Hub
@@ -29,21 +30,13 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          # 红色标记开始
-          tags: |
-            type=raw,value=latest
-            type=raw,value=${{ steps.get-version.outputs.xmrig_version }}
-          # 红色标记结束
-          
+      # 红色标记开始
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          标签: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get-version.outputs.xmrig_version }}
+      # 红色标记结束
