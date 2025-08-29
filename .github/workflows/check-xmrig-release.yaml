@@ -86,7 +86,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             (async () => {
-              // 把步骤输出先放到一个 JS 字符串变量里
+              # 把步骤输出先放到一个 JS 字符串变量里
               const version = "${{ steps.check-release.outputs.version }}";
               console.log(`Triggering docker-build.yaml with xmrig_version=${version}`);
 
