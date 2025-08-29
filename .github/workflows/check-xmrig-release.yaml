@@ -79,22 +79,13 @@ jobs:
             git push
           fi
 
-      - name: Trigger Docker build workflow
-        if: steps.check-release.outputs.should_build == 'true'
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            (async () => {
-              # 把步骤输出先放到一个 JS 字符串变量里
-              const version = "${{ steps.check-release.outputs.version }}";
-              console.log(`Triggering docker-build.yaml with xmrig_version=${version}`);
-
-              await github.rest.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: "docker-build.yaml",
-                ref: "master",
-                inputs: { xmrig_version: version }
-              });
-            })();
+- name: Trigger Docker build workflow
+  if: steps.check-release.outputs.should_build == 'true'
+  uses: peter-evans/workflow-dispatch@v1   # 🔴 使用官方稳定的 workflow-dispatch action
+  with:
+    token: ${{ secrets.GITHUB_TOKEN }}
+    仓库: ${{ github.repository }}
+    workflow: docker-build.yaml
+    ref: master
+    inputs: |
+      xmrig_version: ${{ steps.check-release.outputs.version }}
