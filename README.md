@@ -24,14 +24,14 @@ export POOL_URL="您的矿池 URL"
 export POOL_USER="您的门罗币地址"
 export POOL_PASS="某些矿池可以为空，否则将其用作矿工ID"
 export DONATE_LEVEL="Xmrig 项目捐赠百分比，默认为1"
-export PRIORITY="Xmrig 项目捐赠百分比，默认为5"
-export THREADS="Xmrig 项目捐赠百分比，默认为3"
+export PRIORITY="XMRig进程的系统调度优先级，1-5，默认为最高5"
+export THREADS="CPU线程数量，默认为3，最佳线程数是CPU逻辑核心数减去1或2，以避免系统完全卡死"
 export CUDA="不支持显卡，默认为false"
 export CUDA_BF="不支持显卡，默认为false"
 export ALGO="算法，默认为rx/0"
 export COIN="币种，默认为XMR"
 export WORKERNAME="矿工名，默认为NASCPU"
-export THREAD_DIVISOR="Xmrig 项目捐赠百分比，默认为2"
+export THREAD_DIVISOR="控制XMRig挖矿线程的实际数量，是配合THREADS使用的。它的作用是让你可以将挖矿线程数设置为CPU核心数的某个分数，默认为2"
 
 # 更新镜像
 docker pull bobvane/xmrig:latest
