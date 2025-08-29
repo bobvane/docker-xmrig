@@ -2,11 +2,6 @@ name: Create and publish a Docker image
 
 on:
   workflow_dispatch:    # 支持手动触发
-    inputs:                     # 🔴 新增
-      xmrig_version:            # 🔴 新增
-        description: "XMRig version to build"   # 🔴 新增
-        required: true           # 🔴 新增
-        default: "latest"        # 🔴 新增
 
 env:
   REGISTRY: docker.io
@@ -37,6 +32,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: |                      # 🔴 修改
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest    # 🔴 新增
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.xmrig_version }}   # 🔴 新增
+          标签: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
