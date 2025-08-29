@@ -90,7 +90,5 @@ jobs:
               repo: context.repo.repo,
               workflow_id: 'docker-build.yaml',
               ref: 'master'
-              inputs: {                       # 🔴 新增
-                 xmrig_version: '${{ steps.check-release.outputs.version }}'   # 🔴 新增
-              }
+              inputs: { xmrig_version: "${{ steps.check-release.outputs.version }}" }   // 🔴 注意这里是 JS 对象
             });
