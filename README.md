@@ -2,38 +2,39 @@
 
 # Xmrig - 挂Nas的Docker中使用CPU挖掘门罗币工具
 
-[Xmrig](https://xmrig.com/) is an open-source project for mining Monero cryptocurrency. It allows you to mine locally
-for a pool and receive Monero for your efforts.
+[Xmrig](https://xmrig.com/) 是一个用于挖矿门罗币的开源项目。它允许您在本地为矿池挖矿并获得门罗币作为奖励。
 
-Here, you can launch Xmrig in a Podman or Docker container and to easily run it on Kubernetes, or your local computer
-using standard Docker commands.
+您可以在 Nas的Docker容器中启动 Xmrig，并使用标准 Docker 命令在本地计算机上轻松运行它。
 
-## Getting Started
+## 入门
 
-To mine for **your wallet**, you need a Monero wallet (see [MyMonero](https://mymonero.com/)) and follow the
-instructions below to configure the container accordingly.
+要挖取**XRM或其他币**，您需要一个此币的官方钱包（当然是Xmrig支持的币种），并按照以下说明配置相应的容器。
 
 ### Launching Xmrig
 
 ```bash
-docker run --rm -it ghcr.io/metal3d/xmrig:latest
-# podman
-podman run --rm -it ghcr.io/metal3d/xmrig:latest
+docker run --rm -it bobvane/xmrig:latest
 ```
 
-By default, without any options, you will mine for me, which is a way to support the project. To mine for **your wallet**,
-modify the options using environment variables:
+默认情况下，如果不修改任何选项，您将为我挖矿。要使用您自己的钱包进行挖矿，
+请使用环境变量修改选项：
 
 ```bash
-export POOL_URL="your pool URL"
-export POOL_USER="Your public Monero address"
-export POOL_PASS="can be empty for some pools, otherwise use it as miner ID"
-export DONATE_LEVEL="Xmrig project donation in percent, default is 5"
+export POOL_URL="您的矿池 URL"
+export POOL_USER="您的门罗币地址"
+export POOL_PASS="某些矿池可以为空，否则将其用作矿工 ID"
+export DONATE_LEVEL="Xmrig 项目捐赠百分比，默认为 1"
+export PRIORITY="Xmrig 项目捐赠百分比，默认为 5"
+export THREADS="Xmrig 项目捐赠百分比，默认为 3"
+export CUDA="不支持显卡，默认为false"
+export CUDA_BF="不支持显卡，默认为false"
+export ALGO="算法，默认为rx/0"
+export COIN="币种，默认为XMR"
+export WORKERNAME="矿工名，默认为NASCPU"
+export THREAD_DIVISOR="Xmrig 项目捐赠百分比，默认为 1"
 
 # Update the image
 docker pull ghcr.io/metal3d/xmrig:latest
-# or with podman
-podman pull ghcr.io/metal3d/xmrig:latest
 # Launch the Docker container
 docker run --name miner --rm -it \
     -e POOL_URL=$POOL_URL \
